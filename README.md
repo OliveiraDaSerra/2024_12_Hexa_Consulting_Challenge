@@ -1,0 +1,1 @@
+# 2024_12_Hexa_Consulting_Challenge
