@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct ProductListModel: Codable, Identifiable, Equatable {
-    var id: UUID = UUID()
+struct ProductListModel: Codable, Identifiable, Equatable, Hashable {
+    let id: UUID = UUID()
     let products: [ProductModel]
     
     enum CodingKeys: CodingKey {

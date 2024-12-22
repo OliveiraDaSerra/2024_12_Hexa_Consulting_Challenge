@@ -7,13 +7,14 @@
 
 import Foundation
 
-struct ProductModel: Codable, Identifiable, Equatable {
-    let id: Int
+struct ProductModel: Codable, Identifiable, Equatable, Hashable {
+    let id: UUID = UUID()
+    let idApi: Int
     let title, thumbnail: String?
     let rating, price, discountPercentage, stock: Double?
     
-    enum CodingKeys: CodingKey {
-        case id
+    enum CodingKeys: String, CodingKey {
+        case idApi = "id"
         case title, thumbnail
         case rating, price, discountPercentage, stock
     }

@@ -11,71 +11,68 @@ struct ContentView: View {
     @StateObject var viewModel: ViewModel = ViewModel()
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                switch viewModel.viewState {
-                case .loading:
-                    ProgressView()
-                case .success(let products):
+        ZStack {
+            switch viewModel.viewState {
+            case .loading:
+                ProgressView()
+            case .success(let products):
+                NavigationStack {
                     List {
-                        ForEach(products) { product in
+                        ForEach(products, id: \.id) { product in
                             HStack(
                                 alignment: .center,
                                 spacing: 20.0
                             ) {
-                                if let thumbnail = product.thumbnail {
-                                    AsyncImage(url: URL(string: thumbnail)) { image in
-                                        image
-                                            .thumbnailStyle()
-                                    } placeholder: {
-                                        ProgressView()
-                                            .frame(
-                                                width: 44.0,
-                                                height: 44.0
-                                            )
-                                    }
-                                } else {
-                                    Image(systemName: "questionmark.app.dashed")
-                                        .thumbnailStyle()
-                                }
-                                
-                                VStack(
-                                    alignment: .leading,
-                                    spacing: 4.0
-                                ) {
-                                    TitleValue(
-                                        title: "Title:",
-                                        value: product.title ?? ""
+                                NavigationLink {
+                                    DetailView(productDetails: product)
+                                } label: {
+                                    ThumbnailView(
+                                        product: product,
+                                        thumbnailSize: .init(
+                                            width: 44.0,
+                                            height: 44.0
+                                        )
                                     )
                                     
-                                    TitleValue(
-                                        title: "Rating:",
-                                        value: "\(product.rating ?? 0.0)"
-                                    )
+                                    VStack(
+                                        alignment: .leading,
+                                        spacing: 4.0
+                                    ) {
+                                        TitleValue(
+                                            title: "Title:",
+                                            value: product.title ?? ""
+                                        )
+                                        
+                                        TitleValue(
+                                            title: "Rating:",
+                                            value: "\(product.rating ?? 0.0)"
+                                        )
+                                    }
                                 }
                             }
+                            .id(product.id)
                         }
                     }
                     .refreshable {
                         viewModel.loadProducts()
                     }
-                case .failed:
-                    Text("Error")
-                case .idle:
-                    EmptyView()
+                    .navigationTitle(
+                        Text("Products")
+                    )
                 }
+            case .failed:
+                Text("Error")
+            case .idle:
+                EmptyView()
             }
-            .task {
-                viewModel.loadProducts()
-            }
-            .animation(
-                .default,
-                value: viewModel.viewState
-            )
-            .navigationTitle(
-                Text("Products")
-            )
         }
+        .task {
+            viewModel.loadProducts()
+        }
+        .animation(
+            .default,
+            value: viewModel.viewState
+        )
     }
 }
 

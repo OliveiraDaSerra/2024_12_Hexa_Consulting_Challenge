@@ -12,9 +12,9 @@ struct TitleValue: View {
     var value: String
     
     var body: some View {
-        HStack(alignment: .bottom, spacing: 4.0) {
+        HStack(alignment: .center, spacing: 8.0) {
             Text(title)
-                .font(.caption)
+                .font(.caption2)
             
             Text(value)
                 .font(.headline)
