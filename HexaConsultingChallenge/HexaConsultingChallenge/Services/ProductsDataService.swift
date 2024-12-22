@@ -12,14 +12,6 @@ class ProductsDataService {
     @Published var products: [ProductModel] = []
     private let disposeBag = CancellableBag()
     
-//    init() {
-//        do {
-//            try fetchProducts()
-//        } catch {
-//            debugPrint(">>> Error getting product list: \(error)")
-//        }
-//    }
-    
     func fetchProducts(completion: @escaping () -> Void) throws {
         let urlRequest: URLRequest = try NetworkManager.shared.urlRequest(to: .products)
         NetworkManager.shared.makeRequest(for: urlRequest)
@@ -27,7 +19,6 @@ class ProductsDataService {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: NetworkManager.handleCompletion, receiveValue: { [weak self] productList in
                 guard let self else { return }
-                debugPrint(">>> Product list fetched successfully! Count: \(productList.products.count)")
                 self.products = productList.products
                 completion()
             })
